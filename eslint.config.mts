@@ -2,8 +2,9 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import json from '@eslint/json';
-import css from '@eslint/css';
-import scssParser from 'postcss-scss';
+import htmlParser from '@html-eslint/parser';
+import htmlPlugin from '@html-eslint/eslint-plugin';
+import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
   // --- 기본 설정 ---
@@ -40,26 +41,5 @@ export default tseslint.config(
     },
   },
 
-  // --- CSS 설정 ---
-  {
-    files: ['**/*.css'],
-    extends: [css.configs.recommended],
-    rules: {
-      'css/indent': ['error', 2],
-      'css/no-empty-source': 'error',
-    },
-  },
-  
-  // --- SCSS 설정 ---
-  {
-    files: ['**/*.scss'],
-    extends: [css.configs.recommended],
-    languageOptions: {
-      parser: scssParser,
-    },
-    rules: {
-      'scss/indent': ['error', 2],
-      'scss/no-empty-source': 'error',
-    },
-  }
+  prettierConfig
 );

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A11yQuest - 웹 접근성 분석</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>A11yQuest 퀘스트</h1>
+        <p>웹사이트 URL을 입력하고 접근성 퀘스트를 시작하세요!</p>
+      </header>
+      <main>
+        <form id="analyze-form">
+          <input
+            type="url"
+            id="url-input"
+            placeholder="분석할 웹사이트 URL을 입력하세요"
+            required
+          />
+          <select id="vision-deficiency-select">
+            <option value="">일반 시야</option>
+            <option value="protanopia">적색맹</option>
+            <option value="deuteranopia">녹색맹</option>
+            <option value="tritanopia">청색맹</option>
+            <option value="achromatopsia">완전 색맹</option>
+          </select>
+          <button type="submit">분석 시작</button>
+        </form>
+        <div id="loading-indicator" class="hidden">
+          <div class="spinner"></div>
+          <p>AI가 열심히 분석 중입니다... 잠시만 기다려주세요.</p>
+        </div>
+        <section id="result-section" class="hidden"></section>
+      </main>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { getVisualInfo, AnalyzeRequestBody } from '../services/puppeteerService';
-import { getAccessibilityViolations } from '../services/playwrightService';
+import { getVisualInfo, getAccessibilityViolations } from '../services/playwrightService';
 import { analyzeScreenshot, analyzeAxeReport } from '../services/geminiService';
+import { AnalyzeRequestBody } from '../types';
 
 export const analyzeUrl = async (req: Request, res: Response) => {
   const { url, visionDeficiency } = req.body as AnalyzeRequestBody;
@@ -11,7 +11,6 @@ export const analyzeUrl = async (req: Request, res: Response) => {
   }
 
   try {
-    // 각 서비스 함수를 호출합니다.
     const [visualInfo, accessibilityViolations] = await Promise.all([
       getVisualInfo(url, visionDeficiency),
       getAccessibilityViolations(url),

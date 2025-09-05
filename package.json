@@ -6,7 +6,11 @@
   "scripts": {
     "build": "if exist dist rmdir /s /q dist && mkdir dist && tsc",
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts"
+    "dev": "concurrently \"npm:watch:scss\" \"tsx watch src/index.ts\"",
+    "scss": "sass public/scss:public/css",
+    "watch:scss": "sass --watch public/scss:public/css",
+    "lint:scss": "stylelint \"public/scss/**/*.scss\"",
+    "lint:scss:fix": "stylelint \"public/scss/**/*.scss\" --fix"
   },
   "keywords": [],
   "author": "",
@@ -14,21 +18,21 @@
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@google/generative-ai": "^0.24.1",
-    "@types/puppeteer": "^7.0.4",
     "axe-core": "^4.10.3",
-    "axe-puppeteer": "^1.1.1",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "playwright": "^1.55.0",
-    "puppeteer": "^24.16.2"
+    "playwright": "^1.55.0"
   },
   "devDependencies": {
     "@eslint/css": "^0.10.0",
     "@eslint/js": "^9.33.0",
     "@eslint/json": "^0.13.1",
     "@eslint/markdown": "^7.1.0",
+    "@html-eslint/eslint-plugin": "^0.46.2",
+    "@html-eslint/parser": "^0.46.2",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.3.0",
@@ -36,6 +40,11 @@
     "nodemon": "^3.1.10",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.6.2",
+    "sass": "^1.92.0",
+    "stylelint": "^16.23.1",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard-scss": "^15.0.1",
+    "stylelint-scss": "^6.12.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",

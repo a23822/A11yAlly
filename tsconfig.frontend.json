@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./public/js",
+    "lib": ["ES2020", "DOM"],
+    "module": "ESNext"
+  },
+  "include": ["public/ts/**/*.ts"]
+}
