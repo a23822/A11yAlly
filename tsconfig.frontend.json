@@ -1,9 +1,19 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./public/js",
+    /* Browser Environment Settings */
+    "target": "ES2020",
+    "module": "ESNext",
     "lib": ["ES2020", "DOM"],
-    "module": "ESNext"
+    "outDir": "./public/js",
+
+    /* Module Resolution Settings */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    /* Code Quality & Strictness */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": ["public/ts/**/*.ts"]
 }
