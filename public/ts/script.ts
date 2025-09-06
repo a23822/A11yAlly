@@ -1,3 +1,20 @@
+declare var firebase: any;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDi9E09ykehPle0BM6MBvQTiTcStnwXjJU",
+  authDomain: "a11yquest.firebaseapp.com",
+  projectId: "a11yquest",
+  storageBucket: "a11yquest.firebasestorage.app",
+  messagingSenderId: "890495901051",
+  appId: "1:890495901051:web:5ebfdb9bf334960e40b1de",
+  measurementId: "G-QZV23WQTE4"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
 const form = document.getElementById('analyze-form') as HTMLFormElement;
 const urlInput = document.getElementById('url-input') as HTMLInputElement;
 const visionDeficiencySelect = document.getElementById(
@@ -7,6 +24,49 @@ const loadingIndicator = document.getElementById(
   'loading-indicator',
 ) as HTMLElement;
 const resultSection = document.getElementById('result-section') as HTMLElement;
+
+const loginBtn = document.getElementById('login-btn') as HTMLButtonElement;
+const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement;
+const authContainer = document.getElementById('auth-container') as HTMLElement;
+const userInfo = document.getElementById('user-info') as HTMLElement;
+const userEmail = document.getElementById('user-email') as HTMLSpanElement;
+
+// 로그인 버튼 클릭 이벤트
+loginBtn.addEventListener('click', () => {
+  auth
+    .signInWithPopup(provider)
+    .then((result: any) => {
+      console.log('로그인 성공:', result.user);
+    })
+    .catch((error: any) => {
+      console.error('로그인 오류:', error);
+    });
+});
+
+// 로그아웃 버튼 클릭 이벤트
+logoutBtn.addEventListener('click', () => {
+  auth
+    .signOut()
+    .then(() => {
+      console.log('로그아웃 성공');
+    })
+    .catch((error: any) => {
+      console.error('로그아웃 오류:', error);
+    });
+});
+
+// 사용자의 로그인 상태 변화를 감지합니다.
+auth.onAuthStateChanged((user: any) => {
+  if (user) {
+    loginBtn.classList.add('hidden');
+    userInfo.classList.remove('hidden');
+    userEmail.textContent = user.email;
+  } else {
+    loginBtn.classList.remove('hidden');
+    userInfo.classList.add('hidden');
+    userEmail.textContent = '';
+  }
+});
 
 // 서버로부터 받는 데이터의 타입을 정의합니다.
 interface AnalysisResult {
@@ -51,7 +111,6 @@ form.addEventListener('submit', async (e: Event) => {
     const data: AnalysisResult = await response.json();
     displayResults(data);
   } catch (error) {
-    // error 객체의 타입을 명시하여 안전하게 message 속성에 접근합니다.
     resultSection.innerHTML = `<p style="color: red;"><strong>오류:</strong> ${(error as Error).message}</p>`;
   } finally {
     loadingIndicator.classList.remove('hidden');

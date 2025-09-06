@@ -2,8 +2,6 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import json from '@eslint/json';
-import htmlParser from '@html-eslint/parser';
-import htmlPlugin from '@html-eslint/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
@@ -41,5 +39,5 @@ export default tseslint.config(
     },
   },
 
-  prettierConfig
+  prettierConfig,
 );

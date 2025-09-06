@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
-    /* Browser Environment Settings */
     "target": "ES2020",
-    "module": "ESNext",
+    "module": "ES2020",
     "lib": ["ES2020", "DOM"],
-    "outDir": "./dist/js",
-
-    /* Module Resolution Settings */
+    "outDir": "./public/js",
     "moduleResolution": "node",
     "esModuleInterop": true,
-
-    /* Code Quality & Strictness */
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true

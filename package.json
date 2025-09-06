@@ -1,12 +1,12 @@
 {
-  "name": "a11yquest",
+  "name": "a11yally",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc --project tsconfig.frontend.json && sass public/scss:public/css",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npm:watch:scss\" \"npm:watch:ts-front\" \"tsx watch src/index.ts\"",
+    "dev": "concurrently \"npm:watch:scss\" \"npm:watch:ts-front\" \"tsx watch --env-file .env.local src/index.ts\"",
     "scss": "sass public/scss:public/css",
     "watch:scss": "sass --watch public/scss:public/css",
     "watch:ts-front": "tsc --watch --project tsconfig.frontend.json",
@@ -23,6 +23,7 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "firebase": "^12.2.1",
+    "firebase-tools": "^14.15.2",
     "playwright": "^1.55.0"
   },
   "devDependencies": {
