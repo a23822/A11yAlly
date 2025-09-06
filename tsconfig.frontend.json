@@ -4,7 +4,7 @@
     "target": "ES2020",
     "module": "ESNext",
     "lib": ["ES2020", "DOM"],
-    "outDir": "./public/js",
+    "outDir": "./dist/js",
 
     /* Module Resolution Settings */
     "moduleResolution": "node",
