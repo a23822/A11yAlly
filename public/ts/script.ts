@@ -99,6 +99,12 @@ interface AnalysisResult {
 form.addEventListener('submit', async (e: Event) => {
   e.preventDefault();
 
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    alert('분석을 실행하려면 먼저 로그인해주세요.');
+    return;
+  }
+
   const url = urlInput.value;
   const visionDeficiency = visionDeficiencySelect.value;
 
@@ -107,9 +113,15 @@ form.addEventListener('submit', async (e: Event) => {
   loadingIndicator.classList.remove('hidden');
 
   try {
+    // ▼▼▼ 2. 사용자의 ID 토큰 가져오기 ▼▼▼
+    const idToken = await currentUser.getIdToken();
+
     const response = await fetch('/api/analyze', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`, // 신분증(ID 토큰) 추가
+      },
       body: JSON.stringify({
         url,
         visionDeficiency: visionDeficiency || undefined,
@@ -121,8 +133,11 @@ form.addEventListener('submit', async (e: Event) => {
       throw new Error(errorData.error || '분석 중 오류가 발생했습니다.');
     }
 
-    const data: AnalysisResult = await response.json();
-    displayResults(data);
+    const data: AnalysisResult & { reportId: string } = await response.json();
+    // displayResults(data);
+    alert(
+      `분석 완료! 리포트 ID: ${data.reportId}\n상세 결과 페이지로 이동합니다.`,
+    );
   } catch (error) {
     resultSection.innerHTML = `<p style="color: red;"><strong>오류:</strong> ${(error as Error).message}</p>`;
   } finally {
@@ -131,46 +146,46 @@ form.addEventListener('submit', async (e: Event) => {
   }
 });
 
-function displayResults(data: AnalysisResult) {
-  const {
-    title,
-    analyzedUrl,
-    simulatedDeficiency,
-    aiAnalysis,
-    axeAiAnalysis,
-    accessibilityViolations,
-  } = data;
+// function displayResults(data: AnalysisResult) {
+//   const {
+//     title,
+//     analyzedUrl,
+//     simulatedDeficiency,
+//     aiAnalysis,
+//     axeAiAnalysis,
+//     accessibilityViolations,
+//   } = data;
 
-  const aiAnalysisHtml = `
-        <article>
-            <h2>AI 시각적 분석 (${simulatedDeficiency})</h2>
-            <p><strong>${title}</strong> (${analyzedUrl}) 사이트를 AI가 분석한 결과입니다.</p>
-            <div>${aiAnalysis.replace(/\n/g, '<br>')}</div>
-        </article>
-    `;
+//   const aiAnalysisHtml = `
+//         <article>
+//             <h2>AI 시각적 분석 (${simulatedDeficiency})</h2>
+//             <p><strong>${title}</strong> (${analyzedUrl}) 사이트를 AI가 분석한 결과입니다.</p>
+//             <div>${aiAnalysis.replace(/\n/g, '<br>')}</div>
+//         </article>
+//     `;
 
-  const axeAiAnalysisHtml = `
-        <article>
-            <h2>Axe-core 기반 AI 분석</h2>
-            <div>${axeAiAnalysis.replace(/\n/g, '<br>')}</div>
-        </article>
-    `;
+//   const axeAiAnalysisHtml = `
+//         <article>
+//             <h2>Axe-core 기반 AI 분석</h2>
+//             <div>${axeAiAnalysis.replace(/\n/g, '<br>')}</div>
+//         </article>
+//     `;
 
-  let violationsHtml = '<article><h2>상세 위반 사항</h2>';
-  if (accessibilityViolations && accessibilityViolations.length > 0) {
-    accessibilityViolations.forEach((v) => {
-      violationsHtml += `
-                <div class="violation-card">
-                    <h3>[${v.impact}] ${v.help}</h3>
-                    <p>${v.description}</p>
-                    <p><strong>도움말 URL:</strong> <a href="${v.helpUrl}" target="_blank">${v.helpUrl}</a></p>
-                </div>
-            `;
-    });
-  } else {
-    violationsHtml += '<p>발견된 접근성 위반 사항이 없습니다! 🎉</p>';
-  }
-  violationsHtml += '</article>';
+//   let violationsHtml = '<article><h2>상세 위반 사항</h2>';
+//   if (accessibilityViolations && accessibilityViolations.length > 0) {
+//     accessibilityViolations.forEach((v) => {
+//       violationsHtml += `
+//                 <div class="violation-card">
+//                     <h3>[${v.impact}] ${v.help}</h3>
+//                     <p>${v.description}</p>
+//                     <p><strong>도움말 URL:</strong> <a href="${v.helpUrl}" target="_blank">${v.helpUrl}</a></p>
+//                 </div>
+//             `;
+//     });
+//   } else {
+//     violationsHtml += '<p>발견된 접근성 위반 사항이 없습니다! 🎉</p>';
+//   }
+//   violationsHtml += '</article>';
 
-  resultSection.innerHTML = aiAnalysisHtml + axeAiAnalysisHtml + violationsHtml;
-}
+//   resultSection.innerHTML = aiAnalysisHtml + axeAiAnalysisHtml + violationsHtml;
+// }

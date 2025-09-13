@@ -1,7 +1,10 @@
+import './types/express';
+
 import express, { Express } from 'express';
 import path from 'path';
 import { analyzeRouter } from './api/analyze';
 import { userRouter } from './api/user';
+import { reportRouter } from './api/report';
 
 export const app: Express = express();
 
@@ -23,3 +26,4 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api/analyze', analyzeRouter);
 app.use('/api/user', userRouter);
+app.use('/api/report', reportRouter);
