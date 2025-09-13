@@ -1,3 +1,3 @@
-@import 'common';
-@import '../history/index';
-@import '../report/index';
+@use 'common' as *;
+@use '../history/index';
+@use '../report/index'; //todo 공통처리 방법 추가
