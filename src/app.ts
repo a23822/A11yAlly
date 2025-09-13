@@ -1,5 +1,3 @@
-import './types/express';
-
 import express, { Express } from 'express';
 import path from 'path';
 import { analyzeRouter } from './api/analyze';

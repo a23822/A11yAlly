@@ -9,7 +9,19 @@
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js": [
+        "./node_modules/firebase/app"
+      ],
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js": [
+        "./node_modules/firebase/auth"
+      ],
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js": [
+        "./node_modules/firebase/firestore"
+      ]
+    }
   },
-  "include": ["public/**/*.ts"]
+  "include": ["public/**/*.ts", "public/types/**/*.d.ts"]
 }

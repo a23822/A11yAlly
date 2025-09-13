@@ -20,7 +20,7 @@ export const authMiddleware = async (
     const decodedToken: DecodedIdToken = await admin
       .auth()
       .verifyIdToken(idToken);
-    req.user = decodedToken;
+    (req as any).user = decodedToken;
     next();
   } catch (error) {
     console.error('ID 토큰 검증 오류:', error);

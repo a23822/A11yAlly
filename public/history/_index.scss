@@ -1,0 +1,30 @@
+.report-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .report-info {
+    flex-grow: 1;
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .report-meta {
+      font-size: 0.9em;
+      color: #777;
+    }
+  }
+}

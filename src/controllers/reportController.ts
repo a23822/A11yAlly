@@ -50,3 +50,30 @@ export const getReportById = async (req: Request, res: Response) => {
     res.status(500).send({ error: '서버 오류가 발생했습니다.' });
   }
 };
+
+export const getAllReportsByUser = async (req: Request, res: Response) => {
+  const uid = req.user?.uid;
+
+  try {
+    const reportsRef = firestore.collection('reports');
+    // userId가 현재 로그인한 사용자의 uid와 일치하는 모든 문서를 찾습니다.
+    const snapshot = await reportsRef
+      .where('userId', '==', uid)
+      .orderBy('timestamp', 'desc')
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(200).send([]); // 분석 기록이 없으면 빈 배열 반환
+    }
+
+    const reports: any[] = [];
+    snapshot.forEach((doc) => {
+      reports.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.status(200).send(reports);
+  } catch (error) {
+    console.error('전체 리포트 조회 오류:', error);
+    res.status(500).send({ error: '서버 오류가 발생했습니다.' });
+  }
+};

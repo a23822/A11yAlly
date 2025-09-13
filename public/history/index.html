@@ -3,25 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>분석 리포트 - A11yAlly</title>
-    <link rel="stylesheet" href="/css/report.css" />
+    <title>분석 히스토리 - A11yAlly</title>
+    <link rel="stylesheet" href="/css/history.css" />
   </head>
   <body>
     <div class="container">
       <header>
-        <h1>분석 리포트</h1>
+        <h1>분석 히스토리</h1>
         <p><a href="/home/index.html"> &laquo; 홈으로 돌아가기</a></p>
       </header>
-      <main id="report-content">
+      <main id="history-content">
         <div id="loading-indicator">
           <div class="spinner"></div>
-          <p>리포트를 불러오는 중입니다...</p>
+          <p>분석 기록을 불러오는 중입니다...</p>
         </div>
       </main>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script type="module" src="/js/report/index.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script type="module" src="/js/history/index.js"></script>
   </body>
 </html>

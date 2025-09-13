@@ -1,4 +1,12 @@
-declare let firebase: any;
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut,
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import type { User, UserCredential } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDi9E09ykehPle0BM6MBvQTiTcStnwXjJU',
@@ -10,11 +18,11 @@ const firebaseConfig = {
   measurementId: 'G-QZV23WQTE4',
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
-
+// ... (이하 나머지 코드는 이전과 동일하게 유지됩니다)
 const form = document.getElementById('analyze-form') as HTMLFormElement;
 const urlInput = document.getElementById('url-input') as HTMLInputElement;
 const visionDeficiencySelect = document.getElementById(
@@ -30,39 +38,33 @@ const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement;
 const userInfo = document.getElementById('user-info') as HTMLElement;
 const userEmail = document.getElementById('user-email') as HTMLSpanElement;
 
-// 로그인 버튼 클릭 이벤트
 loginBtn.addEventListener('click', () => {
-  auth
-    .signInWithPopup(provider)
-    .then((result: any) => {
+  signInWithPopup(auth, provider)
+    .then((result: UserCredential) => {
       console.log('로그인 성공:', result.user);
     })
-    .catch((error: any) => {
+    .catch((error) => {
       console.error('로그인 오류:', error);
     });
 });
 
-// 로그아웃 버튼 클릭 이벤트
 logoutBtn.addEventListener('click', () => {
-  auth
-    .signOut()
+  signOut(auth)
     .then(() => {
       console.log('로그아웃 성공');
     })
-    .catch((error: any) => {
+    .catch((error) => {
       console.error('로그아웃 오류:', error);
     });
 });
 
-// 사용자의 로그인 상태 변화를 감지합니다.
-auth.onAuthStateChanged(async (user: any) => {
+onAuthStateChanged(auth, async (user: User | null) => {
   if (user) {
     loginBtn.classList.add('hidden');
     userInfo.classList.remove('hidden');
     userEmail.textContent = user.email;
 
     try {
-      // 백엔드로 사용자 정보를 보내 DB에 저장/업데이트 요청
       await fetch('/api/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -81,7 +83,6 @@ auth.onAuthStateChanged(async (user: any) => {
   }
 });
 
-// 서버로부터 받는 데이터의 타입을 정의합니다.
 interface AnalysisResult {
   title: string;
   analyzedUrl: string;
@@ -113,14 +114,13 @@ form.addEventListener('submit', async (e: Event) => {
   loadingIndicator.classList.remove('hidden');
 
   try {
-    // ▼▼▼ 2. 사용자의 ID 토큰 가져오기 ▼▼▼
     const idToken = await currentUser.getIdToken();
 
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`, // 신분증(ID 토큰) 추가
+        Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify({
         url,
@@ -134,7 +134,7 @@ form.addEventListener('submit', async (e: Event) => {
     }
 
     const data: AnalysisResult & { reportId: string } = await response.json();
-    window.location.href = `/report.html?id=${data.reportId}`;
+    window.location.href = `/report?id=${data.reportId}`;
   } catch (error) {
     resultSection.innerHTML = `<p style="color: red;"><strong>오류:</strong> ${(error as Error).message}</p>`;
   } finally {

@@ -1,28 +1,36 @@
-declare let firebase: any;
+// public/report/index.ts
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import type { User } from 'firebase/auth';
 
 const firebaseConfig = {
-  // script.ts와 동일하게 Firebase 설정값을 붙여넣어 주세요.
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  // ...
-  appId: 'YOUR_APP_ID',
+  apiKey: 'AIzaSyDi9E09ykehPle0BM6MBvQTiTcStnwXjJU',
+  authDomain: 'a11yquest.firebaseapp.com',
+  projectId: 'a11yquest',
+  storageBucket: 'a11yquest.firebasestorage.app',
+  messagingSenderId: '890495901051',
+  appId: '1:890495901051:web:5ebfdb9bf334960e40b1de',
+  measurementId: 'G-QZV23WQTE4',
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
+// ... (이하 나머지 코드는 이전과 동일하게 유지됩니다)
 const loadingIndicator = document.getElementById(
   'loading-indicator',
 ) as HTMLElement;
 const reportContent = document.getElementById('report-content') as HTMLElement;
 
-// URL에서 리포트 ID를 가져오는 함수
 const getReportIdFromUrl = () => {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
 };
 
-// 리포트 데이터를 화면에 표시하는 함수
 const displayReport = (data: any) => {
   const { title, url, issues_json } = data;
   const {
@@ -64,7 +72,6 @@ const displayReport = (data: any) => {
     html += '<p>발견된 접근성 위반 사항이 없습니다! 🎉</p>';
   }
 
-  // ★★★ 무료 사용자에게 업그레이드 버튼 표시 ★★★
   if (isTruncated) {
     html += `
       <div class="upgrade-cta">
@@ -79,8 +86,7 @@ const displayReport = (data: any) => {
   reportContent.innerHTML = html;
 };
 
-// 페이지가 로드될 때 실행되는 메인 로직
-auth.onAuthStateChanged(async (user) => {
+onAuthStateChanged(auth, async (user: User | null) => {
   if (user) {
     const reportId = getReportIdFromUrl();
     if (!reportId) {
@@ -112,7 +118,6 @@ auth.onAuthStateChanged(async (user) => {
       loadingIndicator.classList.add('hidden');
     }
   } else {
-    // 로그인되지 않은 사용자
-    window.location.href = '/'; // 홈으로 리디렉션
+    window.location.href = '/';
   }
 });
