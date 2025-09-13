@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
+import { DecodedIdToken } from 'firebase-admin/auth';
 
 export const authMiddleware = async (
   req: Request,
@@ -16,7 +17,9 @@ export const authMiddleware = async (
 
   try {
     // Firebase Admin SDK를 사용해 토큰을 검증합니다.
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const decodedToken: DecodedIdToken = await admin
+      .auth()
+      .verifyIdToken(idToken);
     req.user = decodedToken;
     next();
   } catch (error) {

@@ -11,7 +11,9 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "declaration": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
