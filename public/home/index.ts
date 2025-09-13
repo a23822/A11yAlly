@@ -134,10 +134,7 @@ form.addEventListener('submit', async (e: Event) => {
     }
 
     const data: AnalysisResult & { reportId: string } = await response.json();
-    // displayResults(data);
-    alert(
-      `분석 완료! 리포트 ID: ${data.reportId}\n상세 결과 페이지로 이동합니다.`,
-    );
+    window.location.href = `/report.html?id=${data.reportId}`;
   } catch (error) {
     resultSection.innerHTML = `<p style="color: red;"><strong>오류:</strong> ${(error as Error).message}</p>`;
   } finally {
@@ -145,47 +142,3 @@ form.addEventListener('submit', async (e: Event) => {
     resultSection.classList.remove('hidden');
   }
 });
-
-// function displayResults(data: AnalysisResult) {
-//   const {
-//     title,
-//     analyzedUrl,
-//     simulatedDeficiency,
-//     aiAnalysis,
-//     axeAiAnalysis,
-//     accessibilityViolations,
-//   } = data;
-
-//   const aiAnalysisHtml = `
-//         <article>
-//             <h2>AI 시각적 분석 (${simulatedDeficiency})</h2>
-//             <p><strong>${title}</strong> (${analyzedUrl}) 사이트를 AI가 분석한 결과입니다.</p>
-//             <div>${aiAnalysis.replace(/\n/g, '<br>')}</div>
-//         </article>
-//     `;
-
-//   const axeAiAnalysisHtml = `
-//         <article>
-//             <h2>Axe-core 기반 AI 분석</h2>
-//             <div>${axeAiAnalysis.replace(/\n/g, '<br>')}</div>
-//         </article>
-//     `;
-
-//   let violationsHtml = '<article><h2>상세 위반 사항</h2>';
-//   if (accessibilityViolations && accessibilityViolations.length > 0) {
-//     accessibilityViolations.forEach((v) => {
-//       violationsHtml += `
-//                 <div class="violation-card">
-//                     <h3>[${v.impact}] ${v.help}</h3>
-//                     <p>${v.description}</p>
-//                     <p><strong>도움말 URL:</strong> <a href="${v.helpUrl}" target="_blank">${v.helpUrl}</a></p>
-//                 </div>
-//             `;
-//     });
-//   } else {
-//     violationsHtml += '<p>발견된 접근성 위반 사항이 없습니다! 🎉</p>';
-//   }
-//   violationsHtml += '</article>';
-
-//   resultSection.innerHTML = aiAnalysisHtml + axeAiAnalysisHtml + violationsHtml;
-// }

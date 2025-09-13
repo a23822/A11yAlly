@@ -4,11 +4,12 @@
     "module": "ES2020",
     "lib": ["ES2020", "DOM"],
     "outDir": "./public/js",
+    "rootDir": "./public",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["public/ts/**/*.ts"]
+  "include": ["public/**/*.ts"]
 }

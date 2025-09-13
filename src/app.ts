@@ -18,11 +18,16 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'home', 'index.html'));
+});
 
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('A11yAlly 서버입니다. /api/analyze 경로로 POST 요청을 보내주세요.');
-// });
+// report 페이지 라우팅 추가 (필요 시)
+app.get('/report', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'report', 'index.html'));
+});
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api/analyze', analyzeRouter);
 app.use('/api/user', userRouter);

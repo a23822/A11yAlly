@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>분석 리포트 - A11yAlly</title>
+    <link rel="stylesheet" href="/css/report.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>분석 리포트</h1>
+        <p><a href="/home/index.html"> &laquo; 홈으로 돌아가기</a></p>
+      </header>
+      <main id="report-content">
+        <div id="loading-indicator">
+          <div class="spinner"></div>
+          <p>리포트를 불러오는 중입니다...</p>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="/js/report/index.js"></script>
+  </body>
+</html>

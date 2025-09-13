@@ -1,0 +1,18 @@
+#auth-container {
+  margin-bottom: 20px;
+}
+
+#analyze-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#url-input,
+#vision-deficiency-select {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
