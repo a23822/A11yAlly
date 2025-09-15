@@ -1,0 +1,49 @@
+@use 'reset';
+
+:root {
+  --primary-color: #4a90e2;
+  --background-color: #f4f7f6;
+  --text-color: #333;
+  --card-bg-color: #ffffff;
+  --border-radius: 8px;
+}
+
+.container {
+  max-width: 768px;
+  margin: 0 auto;
+  background-color: var(--card-bg-color);
+  padding: 20px 40px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+h1,
+h2 {
+  color: var(--primary-color);
+}
+
+button {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #357abd;
+}
+
+.hidden {
+  display: none;
+}
