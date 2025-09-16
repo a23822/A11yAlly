@@ -56,10 +56,6 @@
 			
 			customer: {
 				email: $user.email
-			},
-
-			customData: {
-				firebase_uid: $user.uid
 			}
 		});
 
