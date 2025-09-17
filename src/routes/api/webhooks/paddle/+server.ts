@@ -1,5 +1,3 @@
-// src/routes/api/webhooks/paddle/+server.ts
-
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { REVENUECAT_PUBLIC_API_KEY } from "$env/static/private"; // RevenueCat 비밀키가 아닌 공개키가 필요합니다.
@@ -28,7 +26,6 @@ export const POST: RequestHandler = async ({ request }) => {
         headers: {
           "Content-Type": "application/json",
           "X-Platform": "paddle",
-          // 문서에 나온대로, 여기에는 RevenueCat의 Public API Key를 Bearer 토큰으로 보냅니다.
           Authorization: `Bearer ${REVENUECAT_PUBLIC_API_KEY}`,
         },
         body: JSON.stringify({
@@ -49,7 +46,6 @@ export const POST: RequestHandler = async ({ request }) => {
         `사용자 ${firebaseUid}의 구독 정보가 RevenueCat에 성공적으로 동기화되었습니다.`
       );
 
-      // 성공 시 Firestore DB도 업데이트 (선택사항이지만 권장)
       if (db) {
         await db.collection("users").doc(firebaseUid).update({ is_pro: true });
       }
