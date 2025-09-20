@@ -13,7 +13,8 @@ export interface Report {
   userId: string;
   url: string;
   title: string;
-  timestamp: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  timestamp: any; // 서버와 클라이언트 간 타입이 달라 any 사용이 불가피함
   issues_json: {
     simulatedDeficiency: string;
     aiAnalysis: string;

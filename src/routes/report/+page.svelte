@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
     import { goto } from '$app/navigation';
+	import DOMPurify from 'dompurify';
+	import { marked } from 'marked';
 
 	// `+page.server.ts`의 load 함수가 return한 데이터가 'data'라는 이름의 prop으로 내려옵니다.
 	export let data: PageData;
@@ -15,6 +18,21 @@
 		accessibilityViolations,
 		isTruncated
 	} = issues_json;
+
+	// 렌더링될 HTML을 담을 변수를 준비합니다.
+	let safeAiAnalysis = '';
+	let safeAxeAiAnalysis = '';
+
+	// onMount는 코드가 브라우저에서만 실행되도록 보장합니다.
+	onMount(async () => {
+		// 1. marked로 Markdown을 HTML로 변환합니다.
+		const rawHtmlFromAi = await marked.parse(aiAnalysis);
+		const rawHtmlFromAxe = await marked.parse(axeAiAnalysis);
+
+		// 2. DOMPurify로 변환된 HTML을 소독합니다.
+		safeAiAnalysis = DOMPurify.sanitize(rawHtmlFromAi);
+		safeAxeAiAnalysis = DOMPurify.sanitize(rawHtmlFromAxe);
+	});
 </script>
 
 <div class="container">
@@ -34,18 +52,20 @@
 
 		<article>
 			<h2>AI 시각적 분석 ({simulatedDeficiency})</h2>
-			<div>{@html aiAnalysis.replace(/\n/g, '<br>')}</div>
+			<!-- eslint-disable-next-line -->
+			<div>{@html safeAiAnalysis.replace(/\n/g, '<br>')}</div>
 		</article>
 
 		<article>
 			<h2>Axe-core 기반 AI 분석</h2>
-			<div>{@html axeAiAnalysis.replace(/\n/g, '<br>')}</div>
+			<!-- eslint-disable-next-line -->
+			<div>{@html safeAxeAiAnalysis.replace(/\n/g, '<br>')}</div>
 		</article>
 
 		<article>
 			<h2>상세 위반 사항</h2>
 			{#if accessibilityViolations && accessibilityViolations.length > 0}
-				{#each accessibilityViolations as violation}
+				{#each accessibilityViolations as violation (violation.id)}
 					<div class="violation-card">
 						<h3>[{violation.impact}] {violation.help}</h3>
 						<p>{violation.description}</p>

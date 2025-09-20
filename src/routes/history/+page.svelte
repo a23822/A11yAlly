@@ -15,7 +15,7 @@
 			{#if data.reports.length === 0}
 				<p>아직 분석한 기록이 없습니다. 홈페이지에서 분석을 시작해보세요!</p>
 			{:else}
-				{#each data.reports as report}
+				{#each data.reports as report (report.id)}
 					<div class="report-list-item">
 						<div class="report-info">
 							<a href="/report?id={report.id}">{report.title}</a>

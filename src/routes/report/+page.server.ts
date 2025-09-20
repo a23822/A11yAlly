@@ -2,6 +2,7 @@ import { error } from "@sveltejs/kit";
 import { db } from "$lib/server/firebaseAdmin";
 import type { PageServerLoad } from "./$types";
 import type { Report } from "$lib/types";
+import type admin from "firebase-admin";
 
 // PageServerLoad: SvelteKit에서 페이지 로딩 시 서버에서 실행되는 함수의 타입
 export const load: PageServerLoad = async ({ url, locals }) => {
@@ -32,7 +33,9 @@ export const load: PageServerLoad = async ({ url, locals }) => {
       throw error(404, "리포트를 찾을 수 없습니다.");
     }
 
-    const reportData = reportDoc.data() as Report;
+    const reportData = reportDoc.data() as Omit<Report, "id" | "timestamp"> & {
+      timestamp: admin.firestore.Timestamp;
+    };
     const userData = userDoc.data();
 
     // 자신의 리포트가 맞는지 확인
@@ -62,6 +65,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   } catch (e) {
     console.error("리포트 조회 오류:", e);
     // SvelteKit의 error 헬퍼를 사용해 적절한 HTTP 에러 페이지를 보여줍니다.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (e instanceof Error && (e as any).status) {
       throw e;
     }

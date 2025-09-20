@@ -50,7 +50,8 @@ export async function analyzeScreenshot(
       const model = genAI.getGenerativeModel({ model: FLASH });
       const prompt = `당신은 ${
         visionDeficiency || "일반"
-      } 시야를 가진 웹 접근성 전문가입니다. 이 웹페이지 스크린샷을 보고, 색상 대비가 부족하거나, 배경과 텍스트/버튼이 잘 구분되지 않는 등 색상과 관련된 접근성 문제점 3가지를 찾아서 설명해주세요.`;
+      } 시야를 가진 웹 접근성 전문가입니다. 이 웹페이지 스크린샷을 보고, 색상 대비가 부족하거나, 배경과 텍스트/버튼이 잘 구분되지 않는 등 색상과 관련된 접근성 문제점 3가지를 찾아서 설명해주세요.
+      답변은 반드시 **마크다운(Markdown)** 형식으로 작성해주세요.`;
       const imageParts = [
         {
           inlineData: {
@@ -77,7 +78,7 @@ export async function analyzeAxeReport(violations: Result[]) {
       const prompt = `당신은 웹 접근성 컨설턴트입니다. 다음은 axe-core 도구에서 나온 접근성 위반 사항에 대한 JSON 데이터입니다.
       1. 이 문제들의 심각성을 평가하고, 가장 시급하게 해결해야 할 문제 3가지를 선정해주세요.
       2. 각 문제의 원인과 사용자에게 미치는 영향을 쉽게 설명해주세요.
-      3. 문제를 해결할 수 있는 코드 예시나 구체적인 가이드를 제시해주세요.
+      3. 문제를 해결할 수 있는 코드 예시나 구체적인 가이드를 제시해주세요.답변은 반드시 **마크다운(Markdown)** 형식으로 작성해주세요.
 
       [JSON 데이터]
       ${violationsJson}`;

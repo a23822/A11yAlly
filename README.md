@@ -30,3 +30,19 @@ git clone [https://github.com/a23822/A11yAlly.git](https://github.com/a23822/A11
 cd A11yAlly
 pnpm install
 ```
+
+### 2. 배포
+
+```bash
+# 1. SvelteKit 프로젝트 빌드 (웹 에셋 생성을 위해)
+pnpm run build
+
+# 2. Capacitor 설정 및 웹 에셋을 네이티브 프로젝트에 동기화
+pnpm cap sync
+
+# 3. Android Studio에서 프로젝트 열기
+pnpm cap open android
+
+# 4. (macOS) Xcode에서 프로젝트 열기
+pnpm cap open ios
+```

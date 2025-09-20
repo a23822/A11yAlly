@@ -1,0 +1,13 @@
+//font
+:root {
+  --font-family-default: "Pretendard Variable", Pretendard, sans-serif;
+}
+
+// layout
+:root {
+  --layout-max-width: 768px;
+
+  @media screen and (min-width: 1024px) {
+    --layout-max-width: 1440px;
+  }
+}

@@ -2,6 +2,8 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/firebaseAdmin";
 import type { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import type { Report } from "$lib/types";
+import admin from "firebase-admin";
 
 export const GET: RequestHandler = async ({ locals }) => {
   if (!db) {
@@ -21,9 +23,16 @@ export const GET: RequestHandler = async ({ locals }) => {
       return json([], { status: 200 }); // 빈 배열 반환
     }
 
-    const reports: any[] = [];
+    const reports: Report[] = [];
     snapshot.forEach((doc: QueryDocumentSnapshot) => {
-      reports.push({ id: doc.id, ...doc.data() });
+      const data = doc.data() as Omit<Report, "id" | "timestamp"> & {
+        timestamp: admin.firestore.Timestamp;
+      };
+      reports.push({
+        id: doc.id,
+        ...data,
+        timestamp: data.timestamp.toDate().toISOString(),
+      });
     });
 
     return json(reports, { status: 200 });

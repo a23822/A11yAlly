@@ -70,3 +70,7 @@
 <button id="purchase-btn" on:click={handlePurchase} disabled={isButtonDisabled}>
 	{purchaseBtnText}
 </button>
+
+{#if errorMessage}
+	<p style="color: red;">{errorMessage}</p>
+{/if}

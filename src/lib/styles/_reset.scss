@@ -87,7 +87,10 @@ html {
   line-height: 10px;
 }
 body {
-  font-family: '맑은 고딕', 'malgun gothic', '돋움', 'dotum', 'sans-serif';
+  background-color: var(--color-bg-backstage);
+  color: var(--color-font-title);
+  font-family: var(--font-family-default);
+  letter-spacing: -0.3px;
 }
 h1,
 h2,
@@ -95,13 +98,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: '맑은 고딕', 'malgun gothic', '돋움', 'dotum', 'sans-serif';
+  font-family: var(--font-family-default);
 }
 ol,
 ul {
   list-style: none;
 }
-img {
+img,
+svg {
   vertical-align: top;
 }
 a,

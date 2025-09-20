@@ -22,6 +22,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   } catch (error) {
     // 쿠키가 유효하지 않으면 비로그인 상태로 처리
     event.locals.user = null;
+    console.log("쿠키 검증 오류:", error);
   }
 
   // 4. 다음 단계(페이지의 load 함수 등)를 실행합니다.

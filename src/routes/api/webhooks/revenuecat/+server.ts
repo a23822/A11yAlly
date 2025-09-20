@@ -73,7 +73,7 @@ export const POST: RequestHandler = async ({ request }) => {
         }
         break;
 
-      case "PRODUCT_CHANGE":
+      case "PRODUCT_CHANGE": {
         // 상품 변경 시, 현재 이벤트에 포함된 권한 목록을 기준으로 판단합니다.
         const hasProAccess = entitlement_ids.includes(PRO_ENTITLEMENT_ID);
         updateData = {
@@ -81,6 +81,7 @@ export const POST: RequestHandler = async ({ request }) => {
           subscription_status: hasProAccess ? "active" : "inactive_change",
         };
         break;
+      }
 
       case "CANCELLATION":
         // 취소는 자동 갱신 해제를 의미하며, 즉시 권한을 박탈하지 않습니다. (EXPIRATION에서 처리)
