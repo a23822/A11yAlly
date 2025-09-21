@@ -15,7 +15,13 @@ const config = {
     csp: {
       // 콘텐츠 보안 정책 설정
       directives: {
-        "script-src": ["self"],
+        "script-src": [
+          "self",
+          "https://apis.google.com",
+          "https://www.gstatic.com",
+          "https://www.googleapis.com",
+          "https://securetoken.googleapis.com",
+        ],
       },
     },
   },

@@ -12,6 +12,7 @@
   --color-bg-backstage: #f8f9fa;
   --color-bg-card: #ffffff;
   --color-border-default: #dee2e6;
+  --color-border-inset: rgba(0, 0, 0, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,5 +30,6 @@
     --color-bg-backstage: #1c252e;
     --color-bg-card: #2b3844;
     --color-border-default: #343a40;
+    --color-border-inset: rgba(255, 255, 255, 0.15);
   }
 }

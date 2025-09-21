@@ -10,7 +10,9 @@
     "source.fixAll.stylelint": "explicit"
   },
 
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.useFlatConfig": true,
+
+  "eslint.enable": true,
 
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -23,5 +25,9 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "eslint.format.enable": true
 }
