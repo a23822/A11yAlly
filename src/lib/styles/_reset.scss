@@ -89,8 +89,8 @@ html {
 body {
   width: 100%;
   height: 100%;
-  background-color: var(--color-bg-backstage);
-  color: var(--color-font-title);
+  background-color: rgba(var(--color-bg-backstage), 1);
+  color: rgba(var(--color-font-title), 1);
   font-family: var(--font-family-default);
   letter-spacing: -0.3px;
 }

@@ -1,4 +1,3 @@
-// src/hooks.server.ts
 import type { Handle } from "@sveltejs/kit";
 import { auth } from "$lib/server/firebaseAdmin";
 
@@ -9,22 +8,31 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (!sessionCookie) {
     // 쿠키가 없으면 비로그인 상태로 다음 단계 진행
     event.locals.user = null;
-    return resolve(event);
-  }
-
-  try {
-    if (auth) {
-      // 2. 쿠키가 유효한지 Firebase Admin SDK로 확인합니다.
-      const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
-      // 3. 유효하다면, event.locals에 사용자 정보를 담습니다.
-      event.locals.user = decodedToken;
+  } else {
+    try {
+      if (auth) {
+        // 2. 쿠키가 유효한지 Firebase Admin SDK로 확인합니다.
+        const decodedToken = await auth.verifySessionCookie(
+          sessionCookie,
+          true
+        );
+        // 3. 유효하다면, event.locals에 사용자 정보를 담습니다.
+        event.locals.user = decodedToken;
+      }
+    } catch (error) {
+      // 쿠키가 유효하지 않으면 비로그인 상태로 처리
+      event.locals.user = null;
     }
-  } catch (error) {
-    // 쿠키가 유효하지 않으면 비로그인 상태로 처리
-    event.locals.user = null;
-    console.log("쿠키 검증 오류:", error);
   }
 
-  // 4. 다음 단계(페이지의 load 함수 등)를 실행합니다.
-  return resolve(event);
+  // 4. 다음 단계(페이지의 load 함수 등)를 실행하여 응답을 생성합니다.
+  const response = await resolve(event);
+
+  response.headers.set(
+    "Cross-Origin-Opener-Policy",
+    "same-origin-allow-popups"
+  );
+
+  // 5. 헤더가 추가된 최종 응답을 반환합니다.
+  return response;
 };
