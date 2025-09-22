@@ -5,9 +5,19 @@
 
 // layout
 :root {
-  --layout-max-width: 768px;
+  --layout-max-width-content: 768px;
+
+  --layout-gap-section: 4px;
+
+  --layout-height-header: 62px;
+  --layout-height-inner-header: calc(
+    var(--layout-height-header) - 2 * var(--layout-padding-inner-card-section)
+  );
+
+  --layout-padding-inner-card-section: 16px;
+  --layout-padding-outer-card-section: 8px;
 
   @media screen and (min-width: 1024px) {
-    --layout-max-width: 1440px;
+    --layout-max-width-content: 1440px;
   }
 }

@@ -1,0 +1,17 @@
+@mixin ellipsis($line: 1, $line-height) {
+  @if ($line == 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word; // 공백 없을때 글자 짤림 방지
+    word-break: break-word;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $line;
+    line-height: $line-height * $line;
+    max-height: $line-height * $line;
+  }
+}

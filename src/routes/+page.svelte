@@ -2,6 +2,8 @@
   import { user } from "$lib/stores/authStore";
   import { goto } from "$app/navigation";
   import HeaderSection from "$lib/components/layout/HeaderSection/index.svelte";
+  import CardSection from "$lib/components/common/CardSection/index.svelte";
+  import { HomePageIdCollector } from "$lib/constants/id";
 
   let analyzeIsLoading = false;
   let errorMessage = "";
@@ -45,6 +47,21 @@
 
 <div class="container">
   <HeaderSection />
+  <CardSection title="웹 접근성 분석">
+    <form
+      id={HomePageIdCollector.HOME_FORM_SUBMIT}
+      on:submit|preventDefault={handleAnalyze}
+    >
+      <input
+        type="url"
+        id={HomePageIdCollector.HOME_INPUT_URL}
+        placeholder="분석할 웹사이트 URL을 입력하세요."
+        class="input_url"
+        required
+        bind:value={urlToAnalyze}
+      />
+    </form>
+  </CardSection>
 
   <header style="margin-top: 50px;">
     <h1>A11yAlly</h1>
@@ -57,10 +74,13 @@
   </header>
 
   <main>
-    <form id="analyze-form" on:submit|preventDefault={handleAnalyze}>
+    <form
+      id={HomePageIdCollector.HOME_FORM_SUBMIT}
+      on:submit|preventDefault={handleAnalyze}
+    >
       <input
         type="url"
-        id="url-input"
+        id={HomePageIdCollector.HOME_INPUT_URL}
         placeholder="분석할 웹사이트 URL을 입력하세요"
         required
         bind:value={urlToAnalyze}
@@ -109,5 +129,15 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+  }
+
+  .input_url {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+
+    &::placeholder {
+      color: rgba(var(--color-font-placeholder), 1);
+    }
   }
 </style>

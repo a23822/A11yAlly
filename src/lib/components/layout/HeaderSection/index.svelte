@@ -19,14 +19,8 @@
   let headerInnerStyle = "";
   let headerScrollProgress = 0;
   $: {
-    const progress = Math.min(y / 80, 1);
-
-    // const top = 12 * (1 - progress);
-    // const side = 12 * (1 - progress);
-    // const borderRadius = 8 * (1 - progress);
+    const progress = Math.min(y / 86, 1);
     headerScrollProgress = progress;
-
-    // headerInnerStyle = `top: ${top}px; left: ${side}px; right: ${side}px; border-radius: ${borderRadius}px;`;
   }
 
   onMount(() => {
@@ -55,20 +49,35 @@
     if ($user === undefined) {
       authLoading = true;
     } else if ($user) {
-      authLoading = true;
-      fetch("/api/user")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && !data.error) userProfile = data;
-        })
-        .finally(() => {
+      // async 즉시 실행 함수로 감싸서 await를 사용합니다.
+      (async () => {
+        authLoading = true;
+        // 1. 세션 동기화가 끝날 때까지 기다립니다.
+        await syncSession($user);
+
+        // 2. 세션이 생성된 후에 사용자 정보를 요청합니다.
+        try {
+          const response = await fetch("/api/user");
+          if (response.ok) {
+            const data = await response.json();
+            if (data && !data.error) userProfile = data;
+          } else {
+            console.error("Failed to fetch user profile:", response.statusText);
+            userProfile = null; // 실패 시 프로필 초기화
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        } finally {
           authLoading = false;
-        });
-      syncSession($user);
+        }
+      })();
     } else {
+      // 로그아웃 처리
       userProfile = null;
       authLoading = false;
-      syncSession(null);
+      if (document.cookie.includes("session=")) {
+        syncSession(null);
+      }
     }
   }
 
@@ -116,16 +125,11 @@
   class:is_sticky={isSticky}
   style:--header-scroll-progress={headerScrollProgress}
 >
-  <Section
-    innerClassName="header_inner"
-    innerStyle={headerInnerStyle}
-    title={!authLoading && !$user && "로그인"}
-  >
+  <Section innerClassName="header_inner" innerStyle={headerInnerStyle}>
     {#if authLoading}
       <div class="header_wrap">
-        <div class="skeleton skeleton-p"></div>
-        <div class="skeleton skeleton-btn"></div>
-        <div class="skeleton skeleton-btn"></div>
+        <div class="skeleton skeleton_thumb"></div>
+        <div class="skeleton skeleton_desc"></div>
       </div>
     {:else if $user && userProfile}
       <div class="header_wrap">
@@ -141,98 +145,72 @@
           {/if}
         </div>
         <div class="desc_area">{userProfile?.nickname}</div>
-        <button type="button" class="btn_logout" on:click={handleLogout}>
-          <span class="blind">로그아웃</span>
+        <button
+          type="button"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          class="btn_menu"
+        >
           <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            viewBox="0 0 40 40"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <defs>
-              <!-- 그라데이션 정의 -->
-              <linearGradient
-                id="exitGradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" style="stop-color:#6c757d" />
-                <stop offset="100%" style="stop-color:#495057" />
-              </linearGradient>
-
-              <!-- 호버 효과용 그라데이션 -->
-              <linearGradient
-                id="exitHoverGradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" style="stop-color:#dc3545" />
-                <stop offset="100%" style="stop-color:#c82333" />
-              </linearGradient>
-            </defs>
-
-            <!-- 문 프레임 -->
-            <path
-              d="M4 3 
-           L4 21 
-           L10 21 
-           L10 19 
-           L6 19 
-           L6 5 
-           L10 5 
-           L10 3 
-           Z"
-              fill="url(#exitGradient)"
-              stroke="none"
-            />
-
-            <!-- 문 손잡이 -->
-            <circle cx="8" cy="12" r="0.8" fill="url(#exitGradient)" />
-
-            <!-- 나가는 화살표 -->
-            <path
-              d="M14 7 
-           L14 11 
-           L11 11 
-           L11 13 
-           L14 13 
-           L14 17 
-           L20 12 
-           Z"
-              fill="url(#exitGradient)"
-            />
-
-            <!-- 화살표 테두리 (더 선명하게) -->
-            <path
-              d="M14 7 
-           L14 11 
-           L11 11 
-           L11 13 
-           L14 13 
-           L14 17 
-           L20 12 
-           Z"
-              fill="none"
-              stroke="url(#exitGradient)"
-              stroke-width="0.5"
-            />
+            <rect x="2" y="8" width="36" height="3" rx="1.5" fill="#2C3E50" />
+            <rect x="2" y="16" width="30" height="3" rx="1.5" fill="#34495E" />
+            <rect x="2" y="24" width="34" height="3" rx="1.5" fill="#2C3E50" />
+            <rect x="2" y="32" width="28" height="3" rx="1.5" fill="#34495E" />
           </svg>
         </button>
+        <!-- <button type="button" class="btn_logout" on:click={handleLogout}>
+          <span class="blind">로그아웃</span>
+          <svg
+            viewBox="0 0 32 32"
+            width="80"
+            height="80"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="8"
+              y="8"
+              width="8"
+              height="16"
+              fill="none"
+              stroke="white"
+              stroke-width="2.5"
+              rx="3"
+            />
+            <circle cx="12" cy="16" r="1.2" fill="white" />
+            <path
+              d="M19 12L24 16L19 20"
+              fill="none"
+              stroke="white"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <line
+              x1="16"
+              y1="16"
+              x2="24"
+              y2="16"
+              stroke="white"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button> -->
       </div>
     {:else}
       <div class="login_method_wrap">
+        <h2 class="login_text">로그인</h2>
         <button type="button" class="btn_login" on:click={handleLogin}>
           <span class="thumb_area">
             <svg
-              class="icon_google"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              class="thumb"
             >
               <path
                 fill="#4285F4"
@@ -262,20 +240,21 @@
 <style lang="scss">
   /* 스켈레톤 UI 스타일 */
   .skeleton {
+    height: var(--layout-height-inner-header);
     background-color: #e0e0e0;
     border-radius: 4px;
     animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  .skeleton-p {
-    height: 24px;
-    width: 250px;
-    margin-bottom: 10px;
+  .skeleton_thumb {
+    width: var(--layout-height-inner-header);
+    height: var(--layout-height-inner-header);
+    border-radius: 50%;
   }
-  .skeleton-btn {
-    height: 40px;
-    width: 100px;
-    display: inline-block;
-    margin-right: 10px;
+  .skeleton_desc {
+    margin-right: auto;
+    width: 25%;
+    height: var(--layout-height-inner-header);
+    border-radius: 4px;
   }
   @keyframes pulse {
     50% {
@@ -295,16 +274,24 @@
 
   .header {
     position: relative;
-    margin-bottom: 24px;
-    height: 80px;
+    margin-bottom: var(--layout-gap-section);
+    height: calc(
+      var(--layout-height-header) + 2 * var(--layout-padding-outer-card-section)
+    );
 
     &:before {
       content: "";
       position: fixed;
-      top: calc(68px - 12px * var(--header-scroll-progress));
+      top: calc(
+        calc(
+            var(--layout-height-header) +
+              var(--layout-padding-outer-card-section)
+          ) - var(--layout-padding-outer-card-section) *
+          var(--header-scroll-progress)
+      );
       left: 0;
       right: 0;
-      height: 24px;
+      height: var(--layout-height-inner-header);
       background: linear-gradient(
         0deg,
         rgba(var(--color-bg-card), 0) 0%,
@@ -316,9 +303,18 @@
 
     :global .header_inner {
       position: fixed;
-      top: calc(12px * (1 - var(--header-scroll-progress)));
-      right: calc(12px * (1 - var(--header-scroll-progress)));
-      left: calc(12px * (1 - var(--header-scroll-progress)));
+      top: calc(
+        var(--layout-padding-outer-card-section) *
+          (1 - var(--header-scroll-progress))
+      );
+      right: calc(
+        var(--layout-padding-outer-card-section) *
+          (1 - var(--header-scroll-progress))
+      );
+      left: calc(
+        var(--layout-padding-outer-card-section) *
+          (1 - var(--header-scroll-progress))
+      );
       border-radius: calc(8px * (1 - var(--header-scroll-progress)));
       z-index: 8000;
     }
@@ -337,6 +333,8 @@
     justify-content: space-between;
     align-items: center;
     gap: 8px;
+    height: var(--layout-height-inner-header);
+    line-height: var(--layout-height-inner-header);
     .thumb_area {
       flex-shrink: 0;
       position: relative;
@@ -352,26 +350,52 @@
       }
     }
     .desc_area {
+      overflow: hidden;
+      flex: 1;
       font-size: 1.4rem;
-      line-height: 24px;
       font-weight: 600;
     }
     .btn_logout {
       flex-shrink: 0;
+      background-color: blue;
+      > svg {
+        width: 24px;
+        height: 24px;
+      }
     }
+  }
+
+  .login_method_wrap {
+    display: flex;
+    gap: 0 16px;
+    line-height: var(--layout-height-inner-header);
+  }
+
+  .login_text {
+    font-size: 1.8rem;
+    font-weight: 600;
   }
 
   .btn_login {
     display: flex;
+    align-items: center;
+    gap: 0 6px;
+    padding: 0 8px;
+    border: 2px solid rgba(var(--color-border-default), 1);
+    border-radius: var(--layout-height-inner-header);
     .thumb_area {
       flex: 0 0 auto;
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
     }
     .desc_area {
       flex: 0 1 auto;
-      font-size: 1.3rem;
-      line-height: 24px;
+      font-size: 1.6rem;
+      font-weight: 600;
     }
+  }
+
+  .btn_menu {
+    padding: 5px;
   }
 </style>

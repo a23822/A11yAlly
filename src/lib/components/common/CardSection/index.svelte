@@ -22,14 +22,14 @@
 
 <style lang="scss">
   .section {
-    margin: 0 auto 24px;
-    padding: 12px;
-    max-width: var(--layout-max-width);
+    margin: 0 auto var(--layout-gap-section);
+    padding: var(--layout-padding-outer-card-section);
+    max-width: var(--layout-max-width-content);
   }
   .section_inner {
     position: relative;
     background-color: rgba(var(--color-bg-card), 1);
-    padding: 16px;
+    padding: var(--layout-padding-inner-card-section);
     border-radius: 8px;
     &:before {
       content: "";
@@ -41,7 +41,7 @@
     }
   }
   .section_title_area {
-    padding-bottom: 12px;
+    padding-bottom: var(--layout-padding-inner-card-section);
     line-height: 21px;
     .title {
       font-size: 1.8rem;
